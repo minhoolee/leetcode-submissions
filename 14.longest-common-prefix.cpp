@@ -34,6 +34,13 @@
  * All given inputs are in lowercase letters a-z.
  * 
  */
+
+static auto x = []() {
+	std::ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	return nullptr;
+}();
+
 class Solution {
 public:
   // Test cases:
@@ -42,6 +49,7 @@ public:
   // ["a","a","a"] -> "a"
   // ["abc","abcd","abcde"] -> "abc"
   // ["flower","flow","flight","a"] -> ""
+  // ["aflower","flow","aflow"] -> ""
   // [] -> ""
 
   /**
