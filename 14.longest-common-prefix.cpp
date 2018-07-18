@@ -78,17 +78,11 @@ public:
     // Set minLen to max value
     int minLen = INT_MAX;
 
-    // Set shortest to first string
-    string shortest = strs[0];
-
     // Loop until end of strings
     for (vector<string>::iterator itr = strs.begin(); itr != strs.end(); ++itr) {
-      // If string length shorter than minLen, set minLen to string length 
-      // and shortest to shortest string
-      if (minLen > itr->length()) {
+      // If string length shorter than minLen, set minLen to string length
+      if (minLen > itr->length()) 
         minLen = itr->length();
-        shortest = *itr;
-      }
     }
 
     // Set low to 0, high to minLen
@@ -100,23 +94,23 @@ public:
       int mid = (low + high) / 2;
 
       // If [0...mid-1] is a common prefix, set low to mid + 1
-      if (isCommonPrefix(strs, shortest, mid))
+      if (isCommonPrefix(strs, mid))
         low = mid + 1;
       // Else set high to mid - 1
       else
         high = mid - 1;
     }
     // Return [0...((low + high)/2) - 1] substring of first string
-    return shortest.substr(0, (low + high)/2);
+    return strs[0].substr(0, (low + high)/2);
   }
 
   // Returns true if common prefix, false if not
-  bool isCommonPrefix(vector<string>& strs, string shortest, int len) {
-    // Set prefix to substring [0...len-1] of shortest
-    string prefix = shortest.substr(0, len);
+  bool isCommonPrefix(vector<string>& strs, int len) {
+    // Set prefix to substring [0...len-1] of first string
+    string prefix = strs[0].substr(0, len);
 
-    // Loop through strings
-    for (vector<string>::iterator itr = strs.begin(); itr != strs.end(); ++itr) {
+    // Loop through strings (start with second string)
+    for (vector<string>::iterator itr = strs.begin()+1; itr != strs.end(); ++itr) {
       // If prefix is not beginning of current string, return false
       if (!starts_with(*itr, prefix))
         return false;
