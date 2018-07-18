@@ -72,54 +72,24 @@ public:
    * 
    */
   string longestCommonPrefix(vector<string>& strs) {
-    // If no strings, return empty string
-    if ((int)strs.size() == 0) return "";
+   // If no strings, return empty string
+   if (strs.size() == 0) return "";
 
-    // Set minLen to max value
-    int minLen = INT_MAX;
+   // Set prefix to first string
+   string prefix = strs[0];
 
-    // Loop until end of strings
-    for (vector<string>::iterator itr = strs.begin(); itr != strs.end(); ++itr) {
-      // If string length shorter than minLen, set minLen to string length
-      if (minLen > itr->length()) 
-        minLen = itr->length();
-    }
+   // Loop until end of strings (start with second string)
+   for (vector<string>::iterator itr = strs.begin()+1; itr != strs.end(); ++itr) {
+     // Loop until prefix is substring of current string
+     while (itr->find(prefix) != 0)
+         // Trim prefix's last character
+         prefix = prefix.substr(0, prefix.length()-1);
 
-    // Set low to 0, high to minLen
-    int low = 0, high = minLen;
+         // If prefix is empty string, return empty string
+         if (prefix.empty()) return "";
+   }
 
-    // Loop until low is greater than high
-    while (low <= high) {
-      // Set mid to (low + high) / 2
-      int mid = (low + high) / 2;
-
-      // If [0...mid-1] is a common prefix, set low to mid + 1
-      if (isCommonPrefix(strs, mid))
-        low = mid + 1;
-      // Else set high to mid - 1
-      else
-        high = mid - 1;
-    }
-    // Return [0...((low + high)/2) - 1] substring of first string
-    return strs[0].substr(0, (low + high)/2);
-  }
-
-  // Returns true if common prefix, false if not
-  bool isCommonPrefix(vector<string>& strs, int len) {
-    // Set prefix to substring [0...len-1] of first string
-    string prefix = strs[0].substr(0, len);
-
-    // Loop through strings (start with second string)
-    for (vector<string>::iterator itr = strs.begin()+1; itr != strs.end(); ++itr) {
-      // If prefix is not beginning of current string, return false
-      if (!starts_with(*itr, prefix))
-        return false;
-    }
-    // Return true
-    return true;
-  }
-
-  inline bool starts_with(const string& s1, const string& s2) {
-    return s1.compare(0, s2.length(), s2) == 0;
+   // Return prefix
+   return prefix;
   }
 };
