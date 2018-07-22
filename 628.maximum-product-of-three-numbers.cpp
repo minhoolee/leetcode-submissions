@@ -35,8 +35,15 @@
  * 
  * 
  */
+
+static auto x = []() {
+  std::ios::sync_with_stdio(false);
+  cin.tie(NULL);
+  return nullptr;
+}();
+
 class Solution {
-public:
+ public:
 	/**
 	 * First approach
 	 *
