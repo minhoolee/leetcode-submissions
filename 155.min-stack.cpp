@@ -116,42 +116,42 @@ static auto x = []() {
  */
 
 class MinStack {
+ private:
+  int _min;
+  stack<int> _s;
+
  public:
   MinStack() {
-    min = INT_MAX;
+    _min = INT_MAX;
   }
 
   void push(int x) {
-    if (s.empty()) s.push(x); // Double push first value (always min)
-    if (x <= min) {
-      s.push(min);
-      min = x;
+    if (_s.empty()) _s.push(x); // Double push first value (always min)
+    if (x <= _min) {
+      _s.push(_min);
+      _min = x;
     }
-    s.push(x);
+    _s.push(x);
   }
 
   void pop() {
-    if (s.empty()) throw std::logic_error("Precondition: non-empty stack");
-    if (s.top() == min) {
-      s.pop();
-      min = s.top(); // Previous min that was saved with double push
+    if (_s.empty()) throw std::logic_error("Precondition: non-empty stack");
+    if (_s.top() == _min) {
+      _s.pop();
+      _min = _s.top(); // Previous min that was saved with double push
     }
-    s.pop();
+    _s.pop();
   }
 
   int top() {
-    if (s.empty()) throw std::logic_error("Precondition: non-empty stack");
-    return s.top();
+    if (_s.empty()) throw std::logic_error("Precondition: non-empty stack");
+    return _s.top();
   }
 
   int getMin() {
-    if (s.empty()) throw std::logic_error("Precondition: non-empty stack");
-    return min;
+    if (_s.empty()) throw std::logic_error("Precondition: non-empty stack");
+    return _min;
   }
-
- private:
-  int min;
-  stack<int> s;
 };
 
 /**
