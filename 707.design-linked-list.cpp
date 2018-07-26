@@ -63,6 +63,15 @@ static auto x = []() {
 }();
 
 /**
+ *  Notes for improvement:
+ *
+ *  Use tail pointer so that addAtTail is O(1) time
+ *  Save and keep track of length to intuitively address edge cases
+ *  Doubly linked list makes deletion O(1) time (accessing previous is simpler)
+ *  for little tradeoff (O(2n) vs O(n) space)
+ */
+
+/**
  *  Test cases:
  *  get(0) => -1
  *  addAtHead(5) => 5 ->
@@ -99,39 +108,17 @@ class MyLinkedList {
    * Get the value of the index-th node in the linked list.
    * If the index is invalid, return -1.
    */
-  int get(int index) {
-    Node* curr = head;
-    if (!head) return -1;
-    for (int i = 0; i < index; ++i) {
-      curr = curr->next;
-      if (!curr) return -1;
-    }
-    return curr->val;
-  }
+  int get(int index);
 
   /**
    * Add a node of value val before the first element of the linked list.
    * After the insertion, the new node will be the first node of the
    * linked list.
    */
-  void addAtHead(int val) {
-    Node* newNode  = new Node(val, head);
-    head = newNode;
-  }
+  void addAtHead(int val);
 
   /** Append a node of value val to the last element of the linked list. */
-  void addAtTail(int val) {
-    Node* curr = head;
-    if (!head) {
-      head = new Node(val, nullptr);
-      return;
-    }
-
-    while (curr->next) {
-      curr = curr->next;
-    }
-    curr->next = new Node(val, nullptr);
-  }
+  void addAtTail(int val);
 
   /**
    * Add a node of value val before the index-th node in the linked list.
@@ -139,41 +126,73 @@ class MyLinkedList {
    * appended to the end of linked list. If index is greater than the length,
    * the node will not be inserted.
    */
-  void addAtIndex(int index, int val) {
-    Node* curr = head;
-    if (!head) {
-      if (index == 0) head = new Node(val, nullptr);
-      return;
-    }
-
-    for (int i = 0; i < index-1; ++i) {
-      // Don't insert when index is greater than length
-      if (!curr) return;
-      curr = curr->next;
-    }
-    // Insert (or append) node at index
-    curr->next = new Node(val, curr->next);
-  }
+  void addAtIndex(int index, int val);
 
   /** Delete the index-th node in the linked list, if the index is valid. */
-  void deleteAtIndex(int index) {
-    Node* curr = head;
-    if (!head) return;
-    for (int i = 0; i < index-1; ++i) {
-      curr = curr->next;
-      // Reached end of list before index
-      if (!curr->next) return;
-    }
-    // Index-th node does not exist
-    if (!curr->next) return;
-
-    // Delete index-th node by either skipping it or setting it to nullptr
-    if (curr->next->next)
-      curr->next = curr->next->next;
-    else 
-      curr->next = nullptr;
-  }
+  void deleteAtIndex(int index);
 };
+
+int MyLinkedList::get(int index) {
+Node* curr = head;
+  if (!head) return -1;
+  for (int i = 0; i < index; ++i) {
+    curr = curr->next;
+    if (!curr) return -1;
+  }
+  return curr->val;
+}
+
+void MyLinkedList::addAtHead(int val) {
+  Node* newNode  = new Node(val, head);
+  head = newNode;
+}
+
+void MyLinkedList::addAtTail(int val) {
+  Node* curr = head;
+  if (!head) {
+    head = new Node(val, nullptr);
+    return;
+  }
+
+  while (curr->next) {
+    curr = curr->next;
+  }
+  curr->next = new Node(val, nullptr);
+}
+
+void MyLinkedList::addAtIndex(int index, int val) {
+  Node* curr = head;
+  if (!head) {
+    if (index == 0) head = new Node(val, nullptr);
+    return;
+  }
+
+  for (int i = 0; i < index-1; ++i) {
+    // Don't insert when index is greater than length
+    if (!curr) return;
+    curr = curr->next;
+  }
+  // Insert (or append) node at index
+  curr->next = new Node(val, curr->next);
+}
+
+void MyLinkedList::deleteAtIndex(int index) {
+  Node* curr = head;
+  if (!head) return;
+  for (int i = 0; i < index-1; ++i) {
+    curr = curr->next;
+    // Reached end of list before index
+    if (!curr->next) return;
+  }
+  // Index-th node does not exist
+  if (!curr->next) return;
+
+  // Delete index-th node by either skipping it or setting it to nullptr
+  if (curr->next->next)
+    curr->next = curr->next->next;
+  else 
+    curr->next = nullptr;
+}
 
 /**
  * Your MyLinkedList object will be instantiated and called as such:
