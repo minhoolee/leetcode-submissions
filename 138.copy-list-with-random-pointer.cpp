@@ -39,7 +39,7 @@ static auto x = []() {
  *  Weave deep copies and then extract them
  *
  *  Time: O(n)
- *  Space: O(n)
+ *  Space: O(1)
  *
  *  copyRandomList(head):
  *    Set curr to head
