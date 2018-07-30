@@ -62,6 +62,40 @@ static auto x = []() {
  *      Set curr to curr's next
  *
  *    Return head
+ *
+ *  ListNode* deleteDuplicates(ListNode* head) {
+ *    ListNode* curr = head;
+ *
+ *    while (curr) {
+ *      ListNode* dup = curr->next;
+ *
+ *      while (dup && curr->val == dup->val) dup = dup->next;
+ *
+ *      curr->next = dup;
+ *      curr = curr->next;
+ *    }
+ *
+ *    return head;
+ *  }
+ */
+
+/**
+ *  Cleaner approach
+ *
+ *  Either skip duplicate or move to next node
+ *
+ *  Time: O(n)
+ *  Space: O(1)
+ *
+ *  deleteDuplicates(head):
+ *    Set curr to head
+ *    While curr is not null and curr's next is not null
+ *      If curr's val is equal to curr's next's val
+ *        Set curr's next to curr's next's next // Delete immediate duplicate
+ *      Else
+ *        Set curr to curr's next // Move to next node (must be unique)
+ *
+ *    Return head
  */
 
 /**
@@ -75,13 +109,11 @@ class Solution {
   ListNode* deleteDuplicates(ListNode* head) {
     ListNode* curr = head;
 
-    while (curr) {
-      ListNode* dup = curr->next;
-
-      while (dup && curr->val == dup->val) dup = dup->next;
-
-      curr->next = dup;
-      curr = curr->next;
+    while (curr && curr->next) {
+      if (curr->val == curr->next->val)
+        curr->next = curr->next->next;
+      else
+        curr = curr->next;
     }
 
     return head;
