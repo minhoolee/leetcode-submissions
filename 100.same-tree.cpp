@@ -71,7 +71,7 @@ static auto x = []() {
 /**
  *  First approach
  *
- *  Traverse (post order DFS) and check for equivalence
+ *  Traverse (pre order DFS) and check for equivalence
  *
  *  Time: O(n)
  *  Space: O(1)
@@ -80,11 +80,23 @@ static auto x = []() {
  *    if p and q are null, return true
  *    else if p is null or q is null, return false
  *
- *    // Neither p or q is null
- *    return isSameTree(p's left, q's left) and
- *           isSameTree(p's right, q's right) and
- *           // Post order traversal, so check root after children
- *           if p's value equals q's value
+ *    // Pre order traversal, so check root after children
+ *    return if p's value equals q's value and
+ *           isSameTree(p's left, q's left) and
+ *           isSameTree(p's right, q's right)
+ *
+ *  Cleaner (but less concise) solution
+ *
+ * 	bool isSameTree(TreeNode* p, TreeNode* q) {
+ *     if (!p && !q)
+ *       return true;
+ *     else if (!p || !q)
+ *       return false;
+ *
+ *     return p->val == q->val &&
+ *				 		isSameTree(p->left, q->left) && isSameTree(p->right, q->right);
+ *   }
+ *
  */
 
 /**
@@ -99,12 +111,8 @@ static auto x = []() {
 class Solution {
  public:
   bool isSameTree(TreeNode* p, TreeNode* q) {
-    if (!p && !q)
-      return true;
-    else if (!p || !q)
-      return false;
-
-    return isSameTree(p->left, q->left) && isSameTree(p->right, q->right) &&
-           p->val == q->val;
+    return !(!p ^ !q) &&
+           (!p || (p->val == q->val) &&
+            isSameTree(p->left, q->left) && isSameTree(p->right, q->right));
   }
 };
