@@ -58,7 +58,7 @@ static auto x = []() {
  */
 
 /**
- *  Better approach
+ *  Optimal iterative approach
  *
  *  Create new list that prepends next node in an insertion sort style
  *
@@ -76,6 +76,36 @@ static auto x = []() {
  *      set head to toAdd
  *
  *    return tail
+ *
+ *  ListNode* reverseList(ListNode* head) {
+ *    ListNode* tail = NULL;
+ *
+ *    while (head) {
+ *      ListNode* toAdd = head->next;
+ *      head->next = tail;
+ *      tail = head;
+ *      head = toAdd;
+ *    }
+ *
+ *    return tail;
+ *  }
+ */
+
+/**
+ *  Optimal recursive approach
+ *
+ *  For every L[i], assume L[i+1..n] is reversed already
+ *
+ *  Time: O(n)
+ *  Space: O(n) due to recursive call stack
+ *
+ *  reverseList(head):
+ *    if head is null or head's next is null
+ *      return head
+ *    set newHead to reverseList(head's next)
+ *    set head's next's next to head
+ *    set head's next to null
+ *    return newHead
  */
 
 /**
@@ -88,16 +118,13 @@ static auto x = []() {
 class Solution {
  public:
   ListNode* reverseList(ListNode* head) {
-    ListNode* tail = NULL;
-    ListNode* toAdd = head ? head->next : NULL;
+    if (!head || !head->next) return head;
 
-    while (head) {
-      head->next = tail;
-      tail = head;
-      head = toAdd;
-      if (toAdd) toAdd = toAdd->next;
-    }
+    ListNode* newHead = reverseList(head->next);
 
-    return tail;
+    head->next->next = head;
+    head->next = NULL;
+
+    return newHead;
   }
 };
