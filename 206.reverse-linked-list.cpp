@@ -89,12 +89,13 @@ class Solution {
  public:
   ListNode* reverseList(ListNode* head) {
     ListNode* tail = NULL;
+    ListNode* toAdd = head ? head->next : NULL;
 
     while (head) {
-      ListNode* toAdd = head->next;
       head->next = tail;
       tail = head;
       head = toAdd;
+      if (toAdd) toAdd = toAdd->next;
     }
 
     return tail;
