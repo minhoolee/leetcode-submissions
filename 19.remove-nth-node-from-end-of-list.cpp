@@ -46,6 +46,17 @@ static auto x = []() {
 }();
 
 /**
+ *  Notes for improvement
+ *
+ *  Use pseudoHead (before head) to take care of case where head is deleted
+ *  Note that loop can be split into two loops (no longer need counter)
+ *    1. fast moves ahead to open gap between fast and slow
+ *    2. fast and slow move at same pace until fast reaches end
+ *  It's a bit more intuitive to say fast and slow are n nodes apart and
+ *  fast moves until it's null (so that n=1 is last node)
+ */
+
+/**
  *  Length double-pass approach
  *
  *  Traverse list to find length and then traverse list until n
