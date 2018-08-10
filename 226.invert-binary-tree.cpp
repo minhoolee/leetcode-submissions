@@ -55,12 +55,19 @@ static auto x = []() {
 }();
 
 /**
+ *  Notes for improvement
+ *
+ *  Note that invertTree(root->left) returns the previous left node. Use this
+ *  for swapping without a temp variable
+ */
+
+/**
  *  DFS Approach
  *
  *  Preorder traverse tree recursively, swap left and right nodes until null
  *
  *  Time: O(n)
- *  Space: O(logn)
+ *  Space: O(n)
  *
  *  swapChildren(root):
  *    set tmp to root's left
@@ -85,6 +92,7 @@ class Solution {
     root->left = root->right;
     root->right = tmp;
   }
+
  public:
   TreeNode* invertTree(TreeNode* root) {
     if (!root) return NULL;
