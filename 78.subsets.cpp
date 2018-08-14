@@ -39,7 +39,13 @@ static auto x = []() {
 }();
 
 /**
- *  Recursive approach
+ *  Note
+ *  Time and space complexities for this problem are difficult to calculate;
+ *  try to get help on this from someone better.
+ */
+
+/**
+ *  First, recursive approach
  *
  *  Add single elements, then recursively call subsets on n-1 nums, n times
  *
@@ -95,16 +101,82 @@ static auto x = []() {
  *      remove sub's last element
  *
  *  subsubs(nums):
- *    set subs to empty array
- *    set sub to empty array
+ *    init subs to empty array of arrays
+ *    init sub to empty array
  *    backtrack(nums, 0, sub, subs)
+ *    return subs
+ */
+
+/**
+ *  Iterative approach
+ *
+ *  Add next element to copy of all previous subsets
+ *
+ *  Time: O(n*2^n)
+ *  Space: O(2^n)
+ *
+ *  subsets(nums):
+ *    init subs as array of one empty array
+ *    for i in [0..nums' size]
+ *      set n to subs' size
+ *      // Create copies of n existing subsets
+ *      // and add new element to each
+ *      for j in [0..n]
+ *        add sub[j] to subs
+ *        add nums[j] to subs' last (added duplicate)
+ *    return subs
+ */
+
+/**
+ *  Bit-manipulation approach
+ *
+ *  Use bit mask to represent on/off indices of nums
+ *
+ *  Doesn't scale to n > 32 or 64
+ *
+ *  Time: O(n*2^n) ?
+ *  Space: O(2^n)
+ *
+ *  subsets(nums):
+ *    set n to 2 ^ nums' size
+ *    init subs as array of empty arrays
+ *
+ *    // Bit mask: 0..00, 0..01, 0..10 to 1..11
+ *    for b in [0..n]
+ *      init sub as empty array
+ *      for i in [0..nums' size]
+ *        set index to bitshift right b by i
+ *        if index bitand 1
+ *          add nums[i] to sub
+ *      add sub to subs
+ *    return subs
+ */
+
+/**
+ *  DFS (preorder) approach
+ *
+ *  Construct directed acyclic graph where each node connects to subsequent
+ *  nodes but not previous nodes (when iterating through nums). While
+ *  traversing the graph with DFS, add node to path and add path to subsets
+ *
+ *  Time: O(n*2^n) ?
+ *  Space: O(n*2^n) ?
+ *
+ *  dfs(nums, start, path, subs):
+ *    add path to subs
+ *    for i in [start..nums' size]
+ *      dfs(nums, start + 1, path + nums[i], subs)
+ *
+ *  subsets(nums):
+ *    init subs to empty array of arrays
+ *    init path to empty array
+ *    dfs(nums, 0, path, subs)
  *    return subs
  */
 class Solution {
  private:
   void backtrack(vector<int>& nums, int start, vector<int>& sub,
                  vector<vector<int>>& subs) {
-
     subs.push_back(sub);
     for (int i = start; i < nums.size(); ++i) {
       sub.push_back(nums[i]);
