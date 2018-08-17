@@ -45,12 +45,25 @@ static auto x = []() {
 }();
 
 /**
+ *  Notes for improvement
+ *
+ *  Given that input becomes sorted, there is no need to update min
+ *  (all subsequent starts must be >= min). Check for overlapping intervals
+ *  can also be simplified to just one conditional
+ *
+ *  In fact, there is no need for min at all. An improved solution is adding
+ *  the first non-mergable interval to list and updating that intervals' end
+ *
+ *  Also, in interview use lambda for sorting comparator
+ */
+
+/**
  *  Sliding window approach
  *
  *  Slide window while intervals overlap and then merge and reset window
  *
- *  Time: O(n)
- *  Space: O(n)
+ *  Time: O(nlogn)
+ *  Space: O(1)
  *
  *  merge(intervals):
  *    set min to intervals[0].start
@@ -60,9 +73,7 @@ static auto x = []() {
  *    for i in [1..intervals.size]
  *      set windowInterval to Interval(min, max)
  *
- *      if not isOverlapping(windowInterval, intervals[i]) ||
- *        i = intervals.size:
- *
+ *      if not isOverlapping(windowInterval, intervals[i])
  *        add windowInterval to mergedIntervals
  *        set min to intervals[i].start
  *        set max to intervals[i].end
@@ -70,6 +81,8 @@ static auto x = []() {
  *        set min to min(min, intervals[i].start)
  *        set max to max(max, intervals[i].end)
  *
+ *    // Add last interval or last merged interval
+ *    add Interval(min, max) to mergedIntervals
  *    return mergedIntervals
  *
  *  isOverlapping(a, b):
@@ -78,6 +91,7 @@ static auto x = []() {
  *  merge(a, b):
  *    return Interval(min(a.start, b.start), max(a.end, b.end))
  */
+
 /**
  *  Test cases
  *
@@ -103,11 +117,10 @@ class Solution {
     int max = intervals[0].end;
     vector<Interval> mergedIntervals;
 
-    for (int i = 1; i <= intervals.size(); ++i) {
+    for (int i = 1; i < intervals.size(); ++i) {
       Interval windowInterval = Interval(min, max);
 
-      if (!isOverlapping(windowInterval, intervals[i]) ||
-          i == intervals.size()) {
+      if (!isOverlapping(windowInterval, intervals[i])) {
         mergedIntervals.push_back(windowInterval);
         min = intervals[i].start;
         max = intervals[i].end;
@@ -117,6 +130,7 @@ class Solution {
       }
     }
 
+    mergedIntervals.push_back(Interval(min, max));
     return mergedIntervals;
   }
 };
