@@ -49,6 +49,13 @@ static auto x = []() {
 }();
 
 /**
+ *  Notes for improvement
+ *
+ *  Use accumulate(begin, end, sumVar) to get sum of elements in vector.
+ *  C++ primitive types get randomly initialized.
+ */
+
+/**
  *  Brute force approach
  *
  *  Generate power set with sums and see if any sum is half of set's sum
@@ -91,6 +98,16 @@ static auto x = []() {
  *
  *    return dp[sum]
  */
+
+/**
+ *  Bitset approach
+ *
+ *  Subset sum (O/1 knapsack) problem with sum is hal of set's sum
+ *  https://www.geeksforgeeks.org/subset-sum-queries-using-bitset/
+ *
+ *  Time: O(n)
+ *  Space: O(1), actual space is maxval * maxsize = 100 * 200
+ */
 class Solution {
  public:
   bool canPartition(vector<int>& nums) {
@@ -106,10 +123,8 @@ class Solution {
     dp[0] = true;
 
     for (int num : nums) {
-      for (int rem = sum; rem > 0; --rem) {
-        if (rem >= num) {
-          dp[rem] = dp[rem] || dp[rem - num];
-        }
+      for (int rem = sum; rem >= num; --rem) {
+        dp[rem] |= dp[rem - num];
       }
     }
 
