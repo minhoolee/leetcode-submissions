@@ -73,7 +73,7 @@ static auto x = []() {
  *          set low to mid + 1
  *      // Left of mid has split
  *      else:
- *        if nums[mid] < target < nums[low]:
+ *        if nums[mid] < target <= nums[high]:
  *          set low to mid + 1
  *        else:
  *          set high to mid - 1
@@ -96,7 +96,7 @@ class Solution {
           low = mid + 1;
         }
       } else {
-        if (nums[mid] < target && target < nums[low]) {
+        if (nums[mid] < target && target <= nums[high]) {
           low = mid + 1;
         } else {
           high = mid - 1;
