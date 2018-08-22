@@ -37,11 +37,26 @@ static auto x = []() {
 }();
 
 /**
+ *  Notes for improvement
+ *
+ *  Better solution is binary search for low and high separately.
+ *  Note: will need to check BS return value to see if target exists
+ *
+ *  BS for low requires continuing binary search (to left) if A[mid] = target
+ *  and return low instead of mid. This works because it effectively
+ *  binary searches for low once you hit a value inside interval [low, high].
+ *
+ *  BS for high uses BS for target + 1. This works because BS will return
+ *  insertion position for value even if it does not exist.
+ */
+
+/**
  *  Binary search approach
  *
  *  Binary search for target and then expand window both directions
  *
  *  Time: O(logn + k), where k is size of target interval
+ *        Degrades to O(n) when all elements are target
  *  Space: O(1)
  *
  *  searchRange(nums, target):
@@ -79,6 +94,7 @@ static auto x = []() {
  *  [1,2,3,4,4,4,4]; 4 => [3,6]
  *  [1,2,3,4,5,6,7]; 1 => [0,0]
  *  [1,1,1,1,1,1,2]; 2 => [6,6]
+ *  [1,1,1,1,1,1,1]; 1 => [0,6]
  *  []; 1 => [-1,-1]
  */
 class Solution {
@@ -89,7 +105,7 @@ class Solution {
     while (low <= high) {
       int mid = low + (high - low) / 2;
 
-      if (nums[mid] == target) 
+      if (nums[mid] == target)
         return mid;
       else if (target > nums[mid])
         low = mid + 1;
