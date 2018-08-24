@@ -50,7 +50,7 @@ static auto x = []() {
  *  Time: O(n)
  *  Space: O(logn), worst case O(n)
  *
- *  inOrderTraversal(root):
+ *  inorderTraversal(root):
  *    set res to empty list of integers
  *    dfs(res, root)
  *    return res
@@ -63,20 +63,47 @@ static auto x = []() {
  *    add root to res
  *    dfs(root.right)
  */
-class Solution {
- private:
-  void DFS(TreeNode* root, vector<int>& res) {
-    if (!root) return;
 
-    DFS(root->left, res);
-    res.push_back(root->val);
-    DFS(root->right, res);
-  }
+/**
+ *  Iterative approach
+ *
+ *  Vanilla DFS
+ *
+ *  Time: O(n)
+ *  Space: O(logn), worst case O(n)
+ *
+ *  inorderTraversal(root):
+ *    set res to empty list of integers
+ *    set stack to empty stack of TreeNodes
+ *    set curr to root
+ *
+ *    while curr is not null or stack is not empty:
+ *      while curr is not null:
+ *        add curr to stack
+ *        set curr to curr's left
+ *
+ *      set curr to stack's top
+ *      remove stack's top
+ *      add curr's val to res
+ *      set curr to curr's right
+ */
+class Solution {
  public:
   vector<int> inorderTraversal(TreeNode* root) {
     vector<int> res;
+    stack<TreeNode*> s;
+    TreeNode* curr = root;
 
-    DFS(root, res);
+    while (curr || !s.empty()) {
+      while (curr) {
+        s.push(curr);
+        curr = curr->left;
+      }
+
+      curr = s.top(); s.pop();
+      res.push_back(curr->val);
+      curr = curr->right;
+    }
 
     return res;
   }
