@@ -79,9 +79,26 @@ static auto x = []() {
  *    set dp to empty integer array of size m initialized to 1
  *    for i in [n-2..0]:
  *      for j in [m-2..0]:
- *        set dp[i] to dp[i] + dp[i + 1]
+ *        set dp[j] to dp[j] + dp[j + 1]
  *
  *    return dp[0]
+ */
+
+/**
+ *  Combinatoric approach
+ *
+ *  Robot has to go right m - 1 steps and down n - 1 steps. Each path is 
+ *  permutation of R and D steps. This can be rewritten as 
+ *
+ *  C (m + n, m) 
+ *  = (m + n)! / (m! * n!)
+ *  = ((m + n) * (m + (n-1)) * .. * (m + 0)!) / (m! * n!)
+ *  = ((m + n) * (m + (n-1)) * .. * (m + 1)) / (n!)
+ *
+ *  which can then be written as a for loop easily
+ *
+ *  Time: O(min(m,n))
+ *  Space: O(1)
  */
 
 /**
