@@ -68,6 +68,23 @@ static auto x = []() {
  */
 
 /**
+ *  DP (tab) approach
+ *
+ *  Optimize space by using 1D array and timesteps instead of n
+ *
+ *  Time: O(mn)
+ *  Space: O(m)
+ *
+ *  uniquePaths(m, n):
+ *    set dp to empty integer array of size m initialized to 1
+ *    for i in [n-2..0]:
+ *      for j in [m-2..0]:
+ *        set dp[i] to dp[i] + dp[i + 1]
+ *
+ *    return dp[0]
+ */
+
+/**
  *  Test cases
  *
  *  m = 0, n = 0 => 0
@@ -79,14 +96,14 @@ static auto x = []() {
 class Solution {
  public:
   int uniquePaths(int m, int n) {
-    vector<vector<int>> dp (n, vector<int>(m, 1));
+    vector<int> dp(m, 1);
 
     for (int i = n - 2; i >= 0; --i) {
       for (int j = m - 2; j >= 0; --j) {
-        dp[i][j] = dp[i][j + 1] + dp[i + 1][j];
+        dp[j] = dp[j] + dp[j + 1];
       }
     }
 
-    return dp[0][0];
+    return dp[0];
   }
 };
