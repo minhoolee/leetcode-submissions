@@ -119,8 +119,10 @@ class Solution {
   }
 
   ListNode* Merge(ListNode* low, ListNode* mid) {
-    auto pseudo_head = std::make_unique<ListNode>(0);
-    ListNode* curr = pseudo_head.get();
+    // auto pseudo_head = std::make_unique<ListNode>(0);
+    // ListNode* curr = pseudo_head.get();
+    ListNode pseudo_head(0);
+    ListNode* curr = &pseudo_head;
 
     while (low != NULL && mid != NULL) {
       if (mid->val < low->val) {
@@ -136,7 +138,8 @@ class Solution {
     if (low) curr->next = low;
     if (mid) curr->next = mid;
 
-    return pseudo_head->next;
+    /* return pseudo_head->next; */
+    return pseudo_head.next;
   }
 
  public:
