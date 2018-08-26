@@ -46,6 +46,8 @@ static auto x = []() {
  *  I'd say the most valuable part of this problem is learning how to cut
  *  a linked list in half (mid = ceiling of half) using two pointers.
  *  Using a unique_ptr for pseudo_head is also cool too, I guess.
+ *  Well apparently smart pointers add a TON of ms to run time, so I guess
+ *  I'll just use them in interviews only??
  */
 
 /**
