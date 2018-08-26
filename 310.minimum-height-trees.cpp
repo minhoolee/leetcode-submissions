@@ -113,21 +113,27 @@ static auto x = []() {
  *    return leaves
  */
 class Solution {
+ private:
+  struct Node {
+    unordered_set<int> neighbors;
+    int degree() const { return neighbors.size(); }
+  };
+
  public:
   vector<int> findMinHeightTrees(int n, vector<pair<int, int>>& edges) {
-    if (n == 1) return {0};
+    if (n <= 1) return {0};
 
-    unordered_map<int, unordered_set<int>> adj;
+    unordered_map<int, Node> nodes;
     for (const auto& edge : edges) {
-      adj[edge.second].insert(edge.first);
-      adj[edge.first].insert(edge.second);
+      nodes[edge.second].neighbors.insert(edge.first);
+      nodes[edge.first].neighbors.insert(edge.second);
     }
 
     vector<int> leaves;
-    for (const auto& neighbors : adj) {
-      if (neighbors.second.size() == 1) {
-        leaves.push_back(neighbors.first);
-      }
+    for (const auto& entry : nodes) {
+      const Node* node = &entry.second;
+      const int val = entry.first;
+      if (node->degree() == 1) leaves.push_back(val);
     }
 
     while (n > 2) {
@@ -135,10 +141,9 @@ class Solution {
       vector<int> new_leaves;
 
       for (const auto& leaf : leaves) {
-        int next_node = *(adj[leaf].begin());
-        adj[next_node].erase(leaf);
-        if (adj[next_node].size() == 1)
-          new_leaves.push_back(next_node);
+        int next_node = *(nodes[leaf].neighbors.begin());
+        nodes[next_node].neighbors.erase(leaf);
+        if (nodes[next_node].degree() == 1) new_leaves.push_back(next_node);
       }
 
       leaves = new_leaves;
