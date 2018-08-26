@@ -73,6 +73,15 @@ static auto x = []() {
 }();
 
 /**
+ *  Notes for improvement
+ *
+ *  The previous submissions show attempts to make the solution more 
+ *  object oriented. It's difficult to say if it's clearer like this,
+ *  and it certainly took more time to try to abstractify Node. Probably
+ *  not worth considering that adj[node_val] is pretty conventional.
+ */
+
+/**
  *  BFS approach
  *
  *  Keep pruning leaves until either 1 or 2 nodes remain
@@ -115,7 +124,8 @@ static auto x = []() {
 class Solution {
  private:
   struct Node {
-    unordered_set<int> neighbors;
+    int val;
+    unordered_set<Node*> neighbors;
     int degree() const { return neighbors.size(); }
   };
 
@@ -125,30 +135,36 @@ class Solution {
 
     unordered_map<int, Node> nodes;
     for (const auto& edge : edges) {
-      nodes[edge.second].neighbors.insert(edge.first);
-      nodes[edge.first].neighbors.insert(edge.second);
+      nodes[edge.second].val = edge.second;
+      nodes[edge.first].val = edge.first;
+
+      nodes[edge.second].neighbors.insert(&nodes[edge.first]);
+      nodes[edge.first].neighbors.insert(&nodes[edge.second]);
     }
 
-    vector<int> leaves;
-    for (const auto& entry : nodes) {
-      const Node* node = &entry.second;
-      const int val = entry.first;
-      if (node->degree() == 1) leaves.push_back(val);
+    vector<Node*> leaves;
+    for (auto& entry : nodes) {
+      Node* node = &entry.second;
+      if (node->degree() == 1) leaves.push_back(node);
     }
 
     while (n > 2) {
       n -= leaves.size();
-      vector<int> new_leaves;
+      vector<Node*> new_leaves;
 
       for (const auto& leaf : leaves) {
-        int next_node = *(nodes[leaf].neighbors.begin());
-        nodes[next_node].neighbors.erase(leaf);
-        if (nodes[next_node].degree() == 1) new_leaves.push_back(next_node);
+        Node* next_node = *(leaf->neighbors.begin());
+        next_node->neighbors.erase(leaf);
+        if (next_node->degree() == 1) new_leaves.push_back(next_node);
       }
 
       leaves = new_leaves;
     }
 
-    return leaves;
+    vector<int> res;
+    for (const auto& leaf : leaves)
+      res.push_back(leaf->val);
+
+    return res;
   }
 };
