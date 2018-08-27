@@ -58,7 +58,15 @@
  */
 
 /**
- *  DFS approach
+ *  Notes for improvement
+ *
+ *  Instead of iterating through visited vector, keep a running counter
+ *  of num_vertices and check with number of vertices. This is slightly
+ *  cleaner with iterative version
+ */
+
+/**
+ *  DFS Recursive approach
  *
  *  DFS while marking node as visited
  *
@@ -87,30 +95,62 @@
  *    for next_room in rooms[i]:
  *      DFS(rooms, visited, next_room)
  */
+
+/**
+ *  DFS Iterative approach
+ *
+ *  DFS while marking node as visited
+ *
+ *  Time: O(V + E)
+ *  Space: O(V)
+ *
+ *  canVisitAllRooms(rooms):
+ *    set n to rooms.size
+ *    set visited as array of booleans, size n, init to false
+ *    set visited[0] to true
+ *
+ *    set stack to stack of integers
+ *    add 0 to stack
+ *
+ *    while stack is not empty:
+ *      set i to stack.top
+ *      remove stack.top
+ *
+ *      for next_room in rooms[i]:
+ *        if not visited[next_room]:
+ *          set visited[next_room] to true
+ *          add next_room to stack
+ *
+ *    for open_room in visited:
+ *      if not open_room:
+ *        return false
+ *
+ *    return true
+ */
 class Solution {
- private:
-  void DFS(const vector<vector<int>>& rooms, vector<bool>& visited, int i) {
-    if (visited[i]) return;
-    visited[i] = true;
-
-    for (const auto& next_room : rooms[i]) {
-      DFS(rooms, visited, next_room);
-    }
-  }
-
  public:
   bool canVisitAllRooms(vector<vector<int>>& rooms) {
     int n = rooms.size();
     vector<bool> visited(n, false);
+    visited[0] = true;
+    int num_visited = 1;
 
-    DFS(rooms, visited, 0);
+    stack<int> next_rooms;
+    next_rooms.push(0);
 
-    for (const auto& open_room : visited) {
-      if (!open_room) {
-        return false;
+    while (!next_rooms.empty()) {
+      int i = next_rooms.top(); next_rooms.pop();
+
+      // Visit next rooms with key from room i
+      for (const auto& next_room : rooms[i]) {
+        if (!visited[next_room]) {
+          visited[next_room] = true;
+          ++num_visited;
+          next_rooms.push(next_room);
+        }
       }
     }
 
-    return true;
+    return num_visited == n;
   }
 };
