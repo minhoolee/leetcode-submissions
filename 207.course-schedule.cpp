@@ -54,7 +54,7 @@ static auto x = []() {
 }();
 
 /**
- *  DFS + Cycle approach
+ *  DFS + Cycle Detection approach
  *
  *  DFS the adjacency list and mark each node as visited. Check for cycles
  *
@@ -62,7 +62,7 @@ static auto x = []() {
  *  Space: O(n) aka O(V + E)
  *
  *  canFinish(num_courses, prerequisites):
- *    set adj to empty list of empty list of integers
+ *    set adj to empty map of empty set of integers
  *    for edge in prerequisites:
  *      insert edge[0] into adj[edge[1]]
  *
@@ -95,44 +95,87 @@ static auto x = []() {
  */
 
 /**
+ *  BFS / Kahn's Algorithm + Topological Sort / Cycle detection approach
+ *
+ *  Similar to 310: prune sources (cut outedges) and check if edges exist
+ *  Sources have no more prerequisites. Cycles will never be pruned!
+ *
+ *  Time: O(V + E)
+ *  Space: O(V + E)
+ *
+ *  canFinish(num_courses, prerequisites):
+ *    set adj to empty map of empty set of integers
+ *    set inedges to array of integers, size num_courses, init to 0
+ *
+ *    for edge in prerequisites:
+ *      increment inedges[edge[0]]
+ *      insert edge[0] into adj[edge[1]]
+ *
+ *    set sources to empty queue of integers
+ *    for node, neighbors in adj:
+ *      if inedges[node] = 0:
+ *        add node to sources
+ *
+ *    set num_edges to prerequisites.length
+ *
+ *    while sources is not empty:
+ *      set source to sources.front
+ *      remove sources.front
+ *      for neighbor in adj[source]:
+ *        // Cut outedges of source
+ *        decrement num_edges
+ *        decrement inedges[neighbor]
+ *        if inedges[neighbor] = 0:
+ *          add neighbor to sources
+ *
+ *    if num_edges = 0:
+ *      return true
+ *    else:
+ *      return false
+ */
+
+/**
  *  Test cases
  *
  *  3, [[1,0],[2,1],[0,2]] => false
  *  3, [[1,0],[1,2],[2,0]] => true
- *  2, [[1,0],[0,2]] => true
+ *  3, [[1,0],[0,2]] => true
  */
 class Solution {
- private:
-  bool DFS(unordered_map<int, unordered_set<int>>& adj, vector<int>& visited,
-           int i) {
-    if (visited[i] == 0) return false;
-    if (visited[i] == 1) return true;
-
-    visited[i] = 0;
-
-    for (const auto& neighbor : adj[i]) {
-      if (!DFS(adj, visited, neighbor)) return false;
-    }
-
-    visited[i] = 1;
-    return true;
-  }
-
  public:
-  bool canFinish(int num_courses, vector<pair<int, int>>& prerequisites) {
+  bool canFinish(int num_courses, const vector<pair<int, int>>& prerequisites) {
     if (num_courses <= 1 || prerequisites.empty()) return true;
 
     unordered_map<int, unordered_set<int>> adj;
+    vector<int> inedges(num_courses, 0);
+
     for (const auto& edge : prerequisites) {
+      ++inedges[edge.first];
       adj[edge.second].insert(edge.first);
     }
 
-    vector<int> visited(num_courses, -1);
-
+    queue<int> sources;
     for (const auto& entry : adj) {
-      if (!DFS(adj, visited, entry.first)) return false;
+      const int node = entry.first;
+      if (inedges[node] == 0) {
+        sources.push(node);
+      }
     }
 
-    return true;
+    int num_edges = prerequisites.size();
+
+    while (!sources.empty()) {
+      int source = sources.front(); sources.pop();
+
+      for (const auto& neighbor : adj[source]) {
+        --num_edges;
+
+        if (--inedges[neighbor] == 0) {
+          sources.push(neighbor);
+        }
+      }
+    }
+
+    return num_edges == 0;
   }
 };
