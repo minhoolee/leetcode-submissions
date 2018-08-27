@@ -108,7 +108,7 @@ class MyCircularQueue {
 
 /** Initialize your data structure here. Set the size of the queue to be k. */
 MyCircularQueue::MyCircularQueue(int k)
-    : size_(0), max_size_(k), front_(0), back_(0) {
+    : size_(0), max_size_(k), front_(0), back_(-1) {
   queue_.resize(max_size_);
 }
 
@@ -118,8 +118,8 @@ bool MyCircularQueue::enQueue(int value) {
   if (isFull()) return false;
 
   // Insert element, wrapping around if necessary
-  queue_[back_] = value;
   back_ = (back_ + 1) % max_size_;
+  queue_[back_] = value;
   ++size_;
 
   return true;
@@ -146,7 +146,7 @@ int MyCircularQueue::Front() {
 /** Get the last item from the queue. */
 int MyCircularQueue::Rear() {
   if (isEmpty()) return -1;
-  return queue_[(back_ + max_size_ - 1) % max_size_];
+  return queue_[back_];
 }
 
 /** Checks whether the circular queue is empty or not. */
