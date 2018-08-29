@@ -68,6 +68,7 @@ static auto x = []() {
  *  Time: O(n)
  *  Space: O(1) or O(k) where k = num of distinct characters <= 26
  */
+
 class Solution {
  public:
   int leastInterval(vector<char>& tasks, int n) {
@@ -99,3 +100,16 @@ class Solution {
     return max((int)tasks.size(), num_intervals);
   }
 };
+
+/**
+ *  Priority Queue + Map
+ *
+ *  Greedily select max freq at each time step (interval)
+ *
+ *  Make priority queue of frequencies (descending) and for each interval,
+ *  pull from priority queue (until its freq = 0) and save in map at
+ *  time t + n + 1.
+ *
+ *  Time: O(n)
+ *  Space: O(n)
+ */
