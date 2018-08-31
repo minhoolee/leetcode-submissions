@@ -69,6 +69,8 @@ static auto x = []() {
  *  This may be the ugliest solution I have submitted. I am ashamed.
  *  Note to self: never use tuples/pairs. I am so disappointed.
  *  This problem is pretty interesting, however, so I'll reimplement it
+ *
+ *  EDIT: See earlier submission for use of pairs and get<i>()
  */
 
 /**
@@ -81,13 +83,6 @@ static auto x = []() {
  *  Space: O(k)
  */
 class Solution {
- private:
-  /* struct ComparePair { */
-  /*   bool operator()(const pair<int, int>& a, const pair<int, int>& b) { */
-  /*     return (get<0>(a) + get<1>(a)) > (get<0>(b) + get<1>(b)); */
-  /*   } */
-  /* }; */
-
  public:
   vector<pair<int, int>> kSmallestPairs(vector<int>& nums1, vector<int>& nums2,
                                         int k) {
@@ -98,25 +93,24 @@ class Solution {
 
     // Wow this sucks...
     auto comp_pair = [&](const auto& a, const auto& b) {
-      return (nums1[get<0>(a)] + nums2[get<1>(a)]) >
-             (nums1[get<0>(b)] + nums2[get<1>(b)]);
+      return (nums1[a[0]] + nums2[a[1]]) > (nums1[b[0]] + nums2[b[1]]);
     };
 
-    priority_queue<pair<int, int>, vector<pair<int, int>>, decltype(comp_pair)>
-        pq(comp_pair);
+    priority_queue<vector<int>, vector<vector<int>>, decltype(comp_pair)> pq(
+        comp_pair);
 
     // Add all indices from i, each paired with first element of nums2
-    for (int i = 0; i < min(N1, k); ++i) pq.push(make_pair(i, 0));
+    for (int i = 0; i < min(N1, k); ++i) pq.push({i, 0});
 
     while (k-- > 0 && !pq.empty()) {
       const auto curr = pq.top();
       pq.pop();
-      ans.push_back(make_pair(nums1[get<0>(curr)], nums2[get<1>(curr)]));
+      ans.push_back(make_pair(nums1[curr[0]], nums2[curr[1]]));
 
       // Add {num1, after(num2)}, which may be before or after
       // {after(num1), num2}
-      if (get<1>(curr) + 1 < N2) {
-        pq.push(make_pair(get<0>(curr), get<1>(curr) + 1));
+      if (curr[1] + 1 < N2) {
+        pq.push({curr[0], curr[1] + 1});
       }
     }
 
