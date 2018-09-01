@@ -45,6 +45,21 @@ static auto x = []() {
 }();
 
 /**
+ *  Notes for improvement
+ *
+ *  This problem is a pretty easy DP (tab) problem. However, as shown by how
+ *  the greedy solution is far faster, I should always check to see if
+ *  optimizations can be made to potentially even get rid of dp.
+ *
+ *  The solution lists a pretty nice 4 step process
+ *
+ *  1. Start with the recursive backtracking solution
+ *  2. Optimize by using a memoization table (top-down dynamic programming)
+ *  3. Remove the need for recursion (bottom-up dynamic programming)
+ *  4. Apply final tricks to reduce the time / memory complexity
+ */
+
+/**
  *  Test cases
  *
  *  [] => false
@@ -60,22 +75,50 @@ static auto x = []() {
  *  Time: O(n^2)
  *  Space: O(n)
  */
-class Solution {
- public:
-  bool canJump(vector<int>& nums) {
-    int n = nums.size();
-    if (n == 0) return false;
+/**
+ * class Solution {
+ *  public:
+ *   bool canJump(vector<int>& nums) {
+ *     int n = nums.size();
+ *     if (n == 0) return false;
+ *
+ *     vector<int> dp(n, false);
+ *     dp[n - 1] = true;
+ *
+ *     for (int i = n - 2; i >= 0; --i) {
+ *       int jump = nums[i];
+ *       // Try each jump from 1 to jump length (nums[i])
+ *       for (int j = i + 1; j <= min(i + jump, n - 1) && !dp[i]; ++j) {
+ *         dp[i] = dp[j];
+ *       }
+ *     }
+ *     return dp[0];
+ *   }
+ * };
+ */
 
-    vector<int> dp(n, false);
-    dp[n - 1] = true;
+/**
+ *  Greedy
+ *
+ *  Keep track of leftmost position that can reach end. This comes from
+ *  the observation that dp[i] breaks loop the first time it is true
+ *
+ *  Time: O(n)
+ *  Space: O(1)
+ */
 
-    for (int i = n - 2; i >= 0; --i) {
-      int jump = nums[i];
-      // Try each jump from 1 to jump length (nums[i])
-      for (int j = i + 1; j <= min(i + jump, n - 1) && !dp[i]; ++j) {
-        dp[i] = dp[j];
-      }
-    }
-    return dp[0];
-  }
-};
+ class Solution {
+  public:
+   bool canJump(vector<int>& nums) {
+     int n = nums.size();
+     if (n == 0) return false;
+
+     int last_pos = n - 1;
+     for (int i = n - 1; i >= 0; --i) {
+       if (i + nums[i] >= last_pos) {
+         last_pos = i;
+       }
+     }
+     return last_pos == 0;
+   }
+ };
