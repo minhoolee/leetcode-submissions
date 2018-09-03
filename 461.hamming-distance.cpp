@@ -57,17 +57,41 @@ static auto x = []() {
  *  Time: O(log(max(x, y))
  *  Space: O(1)
  */
+/**
+ * class Solution {
+ *  public:
+ *   int hammingDistance(int x, int y) {
+ *     int h_dist = 0;
+ *     int bits = (int)log2(max(x, y));
+ * 
+ *     for (int k = 0; k <= bits; ++k) {
+ *       // Check equality of kth bit of x and y
+ *       if (((x >> k) & 1) != ((y >> k) & 1)) {
+ *         ++h_dist;
+ *       }
+ *     }
+ *     return h_dist;
+ *   }
+ * };
+ */
+
+/**
+ *  Bit Manipulation
+ *
+ *  Break early if equal
+ *
+ *  Time: O(log(max(x, y))
+ *  Space: O(1)
+ */
 class Solution {
  public:
   int hammingDistance(int x, int y) {
-    int h_dist = 0;
-    int bits = (int)log2(max(x, y));
+    int h_dist = 0, is_unequal = x ^ y;
+    while (is_unequal) {
+      ++h_dist;
 
-    for (int k = 0; k <= bits; ++k) {
-      // Check equality of kth bit of x and y
-      if (((x >> k) & 1) != ((y >> k) & 1)) {
-        ++h_dist;
-      }
+      // Turn off least significant bit
+      is_unequal &= is_unequal - 1;
     }
     return h_dist;
   }
