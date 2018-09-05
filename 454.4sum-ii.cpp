@@ -87,7 +87,10 @@ class Solution {
 
     for (int c : C) {
       for (int d : D) {
-        res += sums[-(c + d)];
+        auto it = sums.find(-(c + d));
+        if (it != sums.end()) {
+          res += it->second;
+        }
       }
     }
 
