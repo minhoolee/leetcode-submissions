@@ -76,24 +76,22 @@ class Solution {
  public:
   int fourSumCount(vector<int>& A, vector<int>& B, vector<int>& C,
                    vector<int>& D) {
-    unordered_map<int, int> sums;
-    int res = 0;
-
-    for (int a : A) {
-      for (int b : B) {
+    // Preallocating size will save some time
+    unordered_map<int, int> sums(A.size() * B.size() * 2);
+    for (const auto& a : A) {
+      for (const auto& b : B) {
         ++sums[a + b];
       }
     }
-
-    for (int c : C) {
-      for (int d : D) {
-        auto it = sums.find(-(c + d));
+    int res = 0;
+    for (const auto& c : C) {
+      for (const auto& d : D) {
+        auto it = sums.find(0 - c - d);
         if (it != sums.end()) {
           res += it->second;
         }
       }
     }
-
     return res;
   }
 };
