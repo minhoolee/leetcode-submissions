@@ -51,6 +51,26 @@ static auto x = []() {
  *  Time: O(N1 + N2)
  *  Space: O(N2)
  */
+/**
+ * class Solution {
+ *  public:
+ *   vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+ *     if (nums1.size() == 0 || nums2.size() == 0) return {};
+ *
+ *     // Remove duplicate elements and change look-up to O(1)
+ *     unordered_set<int> s(nums2.begin(), nums2.end());
+ *
+ *     unordered_set<int> intersects;
+ *     for (const auto& n : nums1) {
+ *       if (s.find(n) != s.end()) {
+ *         intersects.insert(n);
+ *       }
+ *     }
+ *
+ *     return vector<int>(intersects.begin(), intersects.end());
+ *   }
+ * };
+ */
 class Solution {
  public:
   vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
@@ -59,13 +79,14 @@ class Solution {
     // Remove duplicate elements and change look-up to O(1)
     unordered_set<int> s(nums2.begin(), nums2.end());
 
-    unordered_set<int> intersects;
+    vector<int> intersects;
     for (const auto& n : nums1) {
       if (s.find(n) != s.end()) {
-        intersects.insert(n);
+        intersects.push_back(n);
+        s.erase(n); // Remove unique value from set to prevent future duplicates
       }
     }
 
-    return vector<int>(intersects.begin(), intersects.end());
+    return intersects;
   }
 };
