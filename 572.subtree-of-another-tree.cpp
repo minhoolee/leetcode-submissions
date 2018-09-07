@@ -74,22 +74,48 @@ static auto x = []() {
 }();
 
 /**
+ *  Notes for improvement
+ *
+ *  I think the second solution looks cleaner though longer, especially due to
+ *  line splits
+ */
+
+/**
  *  DFS
  *
  *  Time: O(m + n)
  *  Space: O(log(max(m, n)) worst O(max(m, n))
+ */
+/**
+ * class Solution {
+ *  private:
+ *   bool IsSameTree(TreeNode* s, TreeNode* t) {
+ *     if (!s && !t) return true;
+ *     if (!s || !t) return false;
+ *     return s->val == t->val &&
+ *            (IsSameTree(s->left, t->left) && IsSameTree(s->right, t->right));
+ *   }
+ *
+ *  public:
+ *   bool isSubtree(TreeNode* s, TreeNode* t) {
+ *     return s && (IsSameTree(s, t) ||
+ *                  (isSubtree(s->left, t) || isSubtree(s->right, t)));
+ *   }
+ * };
  */
 class Solution {
  private:
   bool IsSameTree(TreeNode* s, TreeNode* t) {
     if (!s && !t) return true;
     if (!s || !t) return false;
-    return s->val == t->val &&
-           (IsSameTree(s->left, t->left) && IsSameTree(s->right, t->right));
+    if (s->val != t->val) return false;
+    return IsSameTree(s->left, t->left) && IsSameTree(s->right, t->right);
   }
 
  public:
   bool isSubtree(TreeNode* s, TreeNode* t) {
-    return s && (IsSameTree(s, t) || (isSubtree(s->left, t) || isSubtree(s->right, t)));
+    if (!s) return false;
+    if (IsSameTree(s, t)) return true;
+    return isSubtree(s->left, t) || isSubtree(s->right, t);
   }
 };
