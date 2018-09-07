@@ -38,23 +38,23 @@
 class Trie {
  public:
   /** Initialize your data structure here. */
-  Trie() { root_ = make_shared<TrieNode>(SIZE); }
+  Trie() { root_ = make_unique<TrieNode>(SIZE); }
 
   /** Inserts a word into the trie. */
   void insert(string word) {
-    shared_ptr<TrieNode> curr = root_;
+    TrieNode* curr = root_.get();
     for (char c : word) {
-      if (!curr->branches_[c - 'a'])
-        curr->branches_[c - 'a'] = make_shared<TrieNode>(SIZE);
-      curr = curr->branches_[c - 'a'];
+      if (!curr->children[c - 'a'])
+        curr->children[c - 'a'] = make_unique<TrieNode>(SIZE);
+      curr = curr->children[c - 'a'].get();
     }
-    curr->is_word_ = true;
+    curr->is_word = true;
   }
 
   /** Returns if the word is in the trie. */
   bool search(string word) {
-    shared_ptr<TrieNode> res = find(word);
-    return res != nullptr && res->is_word_;
+    TrieNode* res = find(word);
+    return res != nullptr && res->is_word;
   }
 
   /** Returns if there is any word in the trie that starts with the given
@@ -63,24 +63,25 @@ class Trie {
 
  private:
   struct TrieNode {
-    bool is_word_;
-    vector<shared_ptr<TrieNode>> branches_;
+    bool is_word;
+    vector<unique_ptr<TrieNode>> children;
     TrieNode(const int size) {
-      is_word_ = false;
-      branches_.resize(size);
+      is_word = false;
+      children.resize(size);
     }
   };
 
-  shared_ptr<TrieNode> find(string word) {
-    shared_ptr<TrieNode> curr = root_;
+  TrieNode* find(string word) {
+    TrieNode* curr = root_.get();
     for (char c : word) {
-      if (!curr->branches_[c - 'a']) return nullptr;
-      curr = curr->branches_[c - 'a'];
+      TrieNode* child = curr->children[c - 'a'].get();
+      if (!child) return nullptr;
+      curr = child;
     }
     return curr;
   }
 
-  shared_ptr<TrieNode> root_;
+  unique_ptr<TrieNode> root_;
 };
 
 /**
