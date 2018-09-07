@@ -76,19 +76,28 @@ static auto x = []() {
  */
 class Solution {
  private:
-  void DFS(vector<vector<int>>& M, vector<bool>& visited, int student) {
-    stack<int> friends;
-    friends.push(student);
-    while (!friends.empty()) {
-      int i = friends.top();
-      friends.pop();
+  // void DFS(vector<vector<int>>& M, vector<bool>& visited, int student) {
+  //   stack<int> friends;
+  //   friends.push(student);
+  //   while (!friends.empty()) {
+  //     int i = friends.top();
+  //     friends.pop();
+  //
+  //     // Add friends to facebook
+  //     for (int j = 0; j < M.size(); ++j) {
+  //       if (M[i][j] == 1 && !visited[j]) {
+  //         visited[j] = true;
+  //         friends.push(j);
+  //       }
+  //     }
+  //   }
+  // }
 
-      // Add friends to facebook
-      for (int j = 0; j < M.size(); ++j) {
-        if (M[i][j] == 1 && !visited[j]) {
-          visited[j] = true;
-          friends.push(j);
-        }
+  void DFS(vector<vector<int>>& M, vector<bool>& visited, int i) {
+    for (int j = 0; j < M.size(); ++j) {
+      if (M[i][j] == 1 && !visited[j]) {
+        visited[j] = true;
+        DFS(M, visited, j);
       }
     }
   }
