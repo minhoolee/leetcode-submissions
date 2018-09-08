@@ -1,0 +1,32 @@
+# EditorConfig is awesome: http://EditorConfig.org
+# Follows Google Style Guides
+
+# Top-most EditorConfig file
+root = true
+
+# Unix-style newlines with a newline ending every file
+[*]
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+end_of_line = lf
+charset = utf-8
+
+[*.{c,h,cpp,hpp}]
+indent_size = 2
+max_line_length = 79
+
+[*.py]
+indent_size = 4
+max_line_length = 79
+
+[*.java]
+indent_size = 2
+max_line_length = 99
+
+[Makefile]
+indent_style = tab
+
+[docs/**.txt]
+max_line_length = 72
