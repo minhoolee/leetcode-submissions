@@ -67,6 +67,19 @@ static auto x = []() {
 }();
 
 /**
+ *  Notes for improvement
+ *
+ *  This is an archetypal union-find problem, but if you don't know union-find,
+ *  the DFS is pretty clear too.
+ *
+ *  Note that the union-find implementation is not optimal but is only three
+ *  lines long (and fairly clear). It could be improved with path compression
+ *  and union by rank, but the latter would decrease code clarity unless the
+ *  disjoint set structure is abstractified and stores rank (otherwise need
+ *  another array to keep track of rank).
+ */
+
+/**
  *  DFS (inorder)
  *
  *  Iteratively DFS while checking visited. Final circles = n - visited + 1
@@ -74,49 +87,99 @@ static auto x = []() {
  *  Time: O(n^2)
  *  Space: O(n)
  */
+/**
+ * class Solution {
+ *  private:
+ *   // void DFS(vector<vector<int>>& M, vector<bool>& visited, int student) {
+ *   //   stack<int> friends;
+ *   //   friends.push(student);
+ *   //   while (!friends.empty()) {
+ *   //     int i = friends.top();
+ *   //     friends.pop();
+ *   //
+ *   //     // Add friends to facebook
+ *   //     for (int j = 0; j < M.size(); ++j) {
+ *   //       if (M[i][j] == 1 && !visited[j]) {
+ *   //         visited[j] = true;
+ *   //         friends.push(j);
+ *   //       }
+ *   //     }
+ *   //   }
+ *   // }
+ *
+ *   void DFS(vector<vector<int>>& M, vector<bool>& visited, int i) {
+ *     for (int j = 0; j < M.size(); ++j) {
+ *       if (M[i][j] == 1 && !visited[j]) {
+ *         visited[j] = true;
+ *         DFS(M, visited, j);
+ *       }
+ *     }
+ *   }
+ *
+ *  public:
+ *   int findCircleNum(vector<vector<int>>& M) {
+ *     if (M.empty() || M[0].empty()) return 0;
+ *
+ *     int n = M.size();
+ *     int group_count = 0;
+ *     vector<bool> visited(n, false);
+ *     for (int i = 0; i < n; ++i) {
+ *       if (!visited[i]) {
+ *         visited[i] = true;
+ *         DFS(M, visited, i);
+ *         ++group_count;  // Increment group count when visiting new groups
+ *       }
+ *     }
+ *
+ *     return group_count;
+ *   }
+ * };
+ */
+
+/**
+ *  Union Find
+ *
+ *  Simple union-find solution that isn't optimal but is super concise. This
+ *  problem is an archetypal union-find problem.
+ *
+ *  Time: O(nlogn) worst case O(n^2)
+ *  Space: O(n)
+ */
 class Solution {
- private:
-  // void DFS(vector<vector<int>>& M, vector<bool>& visited, int student) {
-  //   stack<int> friends;
-  //   friends.push(student);
-  //   while (!friends.empty()) {
-  //     int i = friends.top();
-  //     friends.pop();
-  //
-  //     // Add friends to facebook
-  //     for (int j = 0; j < M.size(); ++j) {
-  //       if (M[i][j] == 1 && !visited[j]) {
-  //         visited[j] = true;
-  //         friends.push(j);
-  //       }
-  //     }
-  //   }
-  // }
-
-  void DFS(vector<vector<int>>& M, vector<bool>& visited, int i) {
-    for (int j = 0; j < M.size(); ++j) {
-      if (M[i][j] == 1 && !visited[j]) {
-        visited[j] = true;
-        DFS(M, visited, j);
-      }
-    }
-  }
-
  public:
   int findCircleNum(vector<vector<int>>& M) {
     if (M.empty() || M[0].empty()) return 0;
 
-    int n = M.size();
+    int m = M.size();
     int group_count = 0;
-    vector<bool> visited(n, false);
-    for (int i = 0; i < n; ++i) {
-      if (!visited[i]) {
-        visited[i] = true;
-        DFS(M, visited, i);
-        ++group_count;  // Increment group count when visiting new groups
+    vector<int> root(m, 0);
+
+    // Make set (initialize each set as disjoint)
+    for (int i = 0; i < m; ++i) root[i] = i;
+
+    // Join sets that are friends (only one half of matrix is needed)
+    for (int i = 0; i < m; ++i) {
+      for (int j = i + 1; j < m; ++j) {
+        if (M[i][j] == 1) {
+          UnionFind(root, i, j);
+        }
+      }
+    }
+
+    // Count number of disjoint sets
+    for (int i = 0; i < m; ++i) {
+      if (root[i] == i) {
+        ++group_count;
       }
     }
 
     return group_count;
+  }
+
+ private:
+  void UnionFind(vector<int>& root, int a_set, int b_set) {
+    while (root[a_set] != a_set) a_set = root[a_set];
+    while (root[b_set] != b_set) b_set = root[b_set];
+    if (root[a_set] != root[b_set]) root[b_set] = a_set;
   }
 };
