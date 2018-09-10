@@ -100,32 +100,27 @@ class Solution {
     unordered_map<string, unordered_map<string, double>> adj;
     for (int i = 0; i < equations.size(); ++i) {
       string a = equations[i].first, b = equations[i].second;
-      adj[a].emplace(b, values[i]);
-      adj[b].emplace(a, 1.0 / values[i]);
+      adj[a][b] = values[i];
+      adj[b][a] = 1.0 / values[i];
     }
 
     // DFS through list for each query
     vector<double> solutions;
     for (const auto& query : queries) {
       string a = query.first, b = query.second;
-      solutions.push_back(Query(a, b, 1, adj));
+      unordered_set<string> visited;
+      solutions.push_back(Query(a, b, adj, visited));
     }
 
     return solutions;
   }
 
  private:
-  double Query(const string& a, const string& b, double res, auto& adj) {
-    unordered_set<string> visited;
-    return DFS(a, b, 1, adj, visited);
-  }
-
   // a / b may take any path from a -> b
-  double DFS(const string& a, const string& b, double res, auto& adj,
-             unordered_set<string>& visited) {
-    if (adj.find(a) == adj.end() || visited.find(a) != visited.end())
-      return -1;
-    if (a == b) return res;
+  double Query(const string& a, const string& b, auto& adj,
+               unordered_set<string>& visited) {
+    if (adj.find(a) == adj.end() || visited.find(a) != visited.end()) return -1;
+    if (a == b) return 1;
     visited.insert(a);
 
     // Visit neighbors of dividend (to find alternate path from a -> b) and
@@ -133,8 +128,8 @@ class Solution {
     for (const auto& next : adj[a]) {
       string c = next.first;
       double quotient = next.second;
-      double result = DFS(c, b, res * quotient, adj, visited);
-      if (result != -1) return result;
+      double result = Query(c, b, adj, visited);
+      if (result != -1) return result * quotient;
     }
 
     return -1;
