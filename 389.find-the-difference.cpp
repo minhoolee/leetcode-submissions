@@ -38,11 +38,21 @@ static auto x = []() {
 }();
 
 /**
+ *  Notes for improvement
+ *
+ *  Nifty bit trick here, something to keep in mind when searching for uniques
+ *  It may help to "unroll" computations and see that operations cancel out
+ */
+
+#define BIT_MANIPULATION
+
+/**
  *  Hash Map
  *
  *  Time: O(n)
  *  Space: O(n)
  */
+#ifdef HASH_MAP
 class Solution {
  public:
   char findTheDifference(string s, string t) {
@@ -63,3 +73,32 @@ class Solution {
     return '\0';
   }
 };
+#endif
+
+/**
+ *  Bit Manipulation
+ *
+ *  Nifty trick to find single unique integer from list containing duplicates
+ *  s + t = list of duplicate chars where only one char (from t) is unique
+ *  Using xor on every char in s + t results in duplicates cancelling out.
+ *  For example:
+ *    a ^ b ^ c ^ a ^ b ^ c ^ c ^ d
+ *  = (a ^ a) ^ (b ^ b) ^ ((c ^ c) ^ c) ^ d
+ *  = 0 ^ 0 ^ (0 ^ c) ^ d
+ *  = 0 ^ d
+ *  = d
+ *
+ *  Time: O(n)
+ *  Space: O(1)
+ */
+#ifdef BIT_MANIPULATION
+class Solution {
+ public:
+  char findTheDifference(string s, string t) {
+    char unique = 0;
+    for (const char c : s) unique ^= c;
+    for (const char c : t) unique ^= c;
+    return unique;
+  }
+};
+#endif
