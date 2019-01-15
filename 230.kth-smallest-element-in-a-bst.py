@@ -53,6 +53,13 @@
 #         self.left = None
 #         self.right = None
 
+# Notes:
+# Python returns None by default, so you don't need a default return value
+# Use k and decrease until 0 instead of using a counter
+# "if curr != None:" and "if curr:" are not the same
+# Just use "stack" to check if stack is empty
+# Study iterative tree traversals again
+
 class Solution(object):
     def kthSmallest(self, root, k):
         """
@@ -63,7 +70,6 @@ class Solution(object):
 
         stack = []
         curr = root
-        count = 0
 
         while curr != None or stack:
 
@@ -74,11 +80,10 @@ class Solution(object):
 
             # Process next smallest node
             curr = stack.pop()
-            count += 1
-            if k == count:
+
+            k -= 1
+            if k == 0:
                 return curr.val
 
             # Move to right subtree if it exists
             curr = curr.right
-
-        return None
