@@ -60,7 +60,7 @@
 class Solution(object):
     def numRescueBoats(self, people, limit):
         """
-        Two pointer approach
+        Sorting + Greedy + Two pointer approach
 
         Time: O(nlogn)
         Space: O(1)
@@ -75,16 +75,13 @@ class Solution(object):
 
         boats = 0
         lo, hi = 0, len(people) - 1
-        while lo < hi:
+        while lo <= hi:
             boats += 1
-            if people[lo] + people[hi] > limit:
-                hi -= 1
-            else:
+            # At least one person goes into the boat
+            hi -= 1
+            # Check if lightest person (not in boat) can also enter
+            if people[lo] + people[hi] <= limit:
                 lo += 1
-                hi -= 1
-
-        if lo == hi:
-            boats += 1
 
         return boats
 
