@@ -51,6 +51,10 @@ class Solution(object):
     def shiftingLetters(self, S, shifts):
         """
         One-pass approach
+
+        Time: O(n)
+        Space: O(1)
+
         :type S: str
         :type shifts: List[int]
         :rtype: str
@@ -62,5 +66,16 @@ class Solution(object):
             total_shift -= shifts[i]
         return shifted_S
 
+"""
+Faster suffix-sum approach
 
+Uses less temporary variables and copies by using join(). I added a mod to
+avoid overflow when summing shifts.
 
+https://leetcode.com/problems/shifting-letters/discuss/137906/C%2B%2BJavaPython-Easy-Understood
+
+def shiftingLetters(self, S, shifts):
+    for i in range(len(shifts) - 1)[::-1]:
+        shifts[i] = (shifts[i] + shifts[i + 1]) % 26
+    return "".join(chr((ord(c) - 97 + s) % 26 + 97) for c, s in zip(S, shifts))
+"""
