@@ -39,13 +39,15 @@
 #
 #
 class Solution(object):
-    DIRS = [[0, -1],
-            [0, 1],
-            [1, 0],
-            [-1, 0]]
+    DIRS = [(0, -1), (0, 1), (1, 0), (-1, 0)]
 
     def numIslands(self, grid):
         """
+        DFS approach
+
+        Time: O(n * m)
+        Space: O(n * m) (technically)
+
         :type grid: List[List[str]]
         :rtype: int
         """
