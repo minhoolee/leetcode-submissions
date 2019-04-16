@@ -39,6 +39,35 @@
 class Solution(object):
     def buildTree(self, preorder, inorder):
         """
+        Recursive precached approach
+
+        See C++ solution for details
+
+        Time: O(n)
+        Space: O(logn) due to recursion
+
+        :type preorder: List[int]
+        :type inorder: List[int]
+        :rtype: TreeNode
+        """
+        inor_dict = {val : i for i, val in enumerate(inorder)}
+        pre_iter = iter(preorder)
+
+        def helper(start, end):
+            if start > end: return None
+            root_val = next(pre_iter)
+            # Advance to next node as root
+            root = TreeNode(root_val)
+            # Find pivot position of new root in inorder
+            idx = inor_dict[root_val]
+            root.left = helper(start, idx-1)
+            root.right = helper(idx+1, end)
+            return root
+
+        return helper(0, len(inorder) - 1)
+
+    def buildTreeSlow(self, preorder, inorder):
+        """
         Recursive approach
 
         See C++ solution for details
